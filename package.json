@@ -1,0 +1,13 @@
+{
+  "name": "jquery-hastie",
+  "version": "0.0.1",
+  "author": "Florian Plank",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/polarblau/hastie"
+  },
+  "description": "",
+  "homepage": "http://polarblau.github.com/hastie/",
+  "main": "./lib/src/jquery.hastie",
+  "license": "MIT/GPL"
+}
