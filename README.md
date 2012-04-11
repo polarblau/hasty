@@ -2,4 +2,4 @@
 coffee -w -c .
 
 # GET LAST COMMIT WHICH AFFECTED <FILE>
-git rev-list -n 1 HEAD <FILE>
+git rev-list -n 1 HEAD -- <FILE>
