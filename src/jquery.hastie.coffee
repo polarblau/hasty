@@ -8,3 +8,10 @@ $.fn.hastie = (options) ->
 
   this.each ->
     $this = $(this)
+    url   = $this.data('comments-url')
+
+    $.ajax
+      url     : url
+      success : (data) -> console.log data
+      dataType: 'jsonp'
+

@@ -11,8 +11,16 @@
       commentTemplate: 'bar'
     });
     return this.each(function() {
-      var $this;
-      return $this = $(this);
+      var $this, url;
+      $this = $(this);
+      url = $this.data('comments-url');
+      return $.ajax({
+        url: url,
+        success: function(data) {
+          return console.log(data);
+        },
+        dataType: 'jsonp'
+      });
     });
   };
 
