@@ -10,17 +10,17 @@
       commentsTemplate: 'foo',
       commentTemplate: 'bar'
     });
-    defaultTemplate = "{{#comments}}\n  * {{body}}\n{{/comments}}";
+    defaultTemplate = "<ul>\n  {{#comments}}\n    <li>{{body}}</li>\n  {{/comments}}\n</ul>";
     render = function(comments, $container) {
       var output;
       output = Mustache.render(defaultTemplate, {
         comments: comments
       });
-      console.log(comments, output);
       return $container.html(comments);
     };
     return this.each(function() {
-      var $this, url;
+      var $this, url,
+        _this = this;
       $this = $(this);
       url = $this.data('comments-url');
       return $.ajax({

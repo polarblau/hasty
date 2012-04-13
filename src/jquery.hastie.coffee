@@ -8,14 +8,15 @@ $.fn.hastie = (options) ->
 
   defaultTemplate =
   """
-    {{#comments}}
-      * {{body}}
-    {{/comments}}
+    <ul>
+      {{#comments}}
+        <li>{{body}}</li>
+      {{/comments}}
+    </ul>
   """
 
   render = (comments, $container) ->
     output = Mustache.render(defaultTemplate, comments: comments)
-    console.log comments, output
     $container.html(comments)
 
   this.each ->
@@ -24,7 +25,7 @@ $.fn.hastie = (options) ->
 
     $.ajax
       url     : url
-      success : (comments) ->
+      success : (comments) =>
         render(comments.data, $this)
       dataType: 'jsonp'
 
