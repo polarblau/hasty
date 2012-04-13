@@ -13,7 +13,9 @@
     defaultTemplate = "{{#comments}}\n  * {{body}}\n{{/comments}}";
     render = function(comments, $container) {
       var output;
-      output = Mustache.render(defaultTemplate, comments);
+      output = Mustache.render(defaultTemplate, {
+        comments: comments
+      });
       console.log(comments, output);
       return $container.html(comments);
     };

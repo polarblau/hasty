@@ -14,7 +14,7 @@ $.fn.hastie = (options) ->
   """
 
   render = (comments, $container) ->
-    output = Mustache.render(defaultTemplate, comments)
+    output = Mustache.render(defaultTemplate, comments: comments)
     console.log comments, output
     $container.html(comments)
 
