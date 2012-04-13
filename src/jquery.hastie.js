@@ -5,21 +5,21 @@
   $ = jQuery;
 
   $.fn.hastie = function(options) {
-    var defaultTemplate, render, settings,
-      _this = this;
+    var defaultTemplate, render, settings;
     settings = $.extend({
       commentsTemplate: 'foo',
       commentTemplate: 'bar'
     });
     defaultTemplate = "{{#comments}}\n  * {{body}}\n{{/comments}}";
-    render = function(comments, container) {
+    render = function(comments, $container) {
       var output;
       output = Mustache.render(defaultTemplate, comments);
-      return container.html(comments);
+      console.log(comments, output);
+      return $container.html(comments);
     };
     return this.each(function() {
       var $this, url;
-      $this = $(_this);
+      $this = $(this);
       url = $this.data('comments-url');
       return $.ajax({
         url: url,

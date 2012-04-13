@@ -13,17 +13,18 @@ $.fn.hastie = (options) ->
     {{/comments}}
   """
 
-  render = (comments, container) ->
+  render = (comments, $container) ->
     output = Mustache.render(defaultTemplate, comments)
-    container.html(comments)
+    console.log comments, output
+    $container.html(comments)
 
-  this.each =>
+  this.each ->
     $this = $(this)
     url   = $this.data('comments-url')
 
     $.ajax
       url     : url
-      success : (comments) =>
+      success : (comments) ->
         render(comments.data, $this)
       dataType: 'jsonp'
 
