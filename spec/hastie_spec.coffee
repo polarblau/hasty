@@ -2,7 +2,7 @@ describe 'hastie', ->
 
   $comments    = null
 
-  COMMENTS_URL = 'https://api.github.com/repos/rails/rails/commits/b1e55041ebb33a27121eff4424eeeaee4e4b5028/comments'
+  COMMENTS_URL = 'https://api.github.com/repos/polarblau/hastie-test-blog/commits/71a795094eb8a04d7d41208aa5930ec257c73979/comments'
 
   # SPECS
   #

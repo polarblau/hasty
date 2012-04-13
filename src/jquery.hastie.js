@@ -5,10 +5,17 @@
   $ = jQuery;
 
   $.fn.hastie = function(options) {
-    var settings;
+    var defaultTemplate, settings;
     settings = $.extend({
       commentsTemplate: 'foo',
       commentTemplate: 'bar'
+    });
+    defaultTemplate = "{{#comments}}\n  * {{body}}\n{{/comments}}";
+    ({
+      render: function(comments) {
+        var output;
+        return output = Mustache.render(defaultTemplate, comments);
+      }
     });
     return this.each(function() {
       var $this, url;
@@ -17,7 +24,7 @@
       return $.ajax({
         url: url,
         success: function(data) {
-          return console.log(data);
+          return render(data.data);
         },
         dataType: 'jsonp'
       });
