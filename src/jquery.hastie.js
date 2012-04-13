@@ -5,20 +5,18 @@
   $ = jQuery;
 
   $.fn.hastie = function(options) {
-    var defaultTemplate, settings,
+    var defaultTemplate, render, settings,
       _this = this;
     settings = $.extend({
       commentsTemplate: 'foo',
       commentTemplate: 'bar'
     });
     defaultTemplate = "{{#comments}}\n  * {{body}}\n{{/comments}}";
-    ({
-      render: function(comments, container) {
-        var output;
-        output = Mustache.render(defaultTemplate, comments);
-        return container.html(comments);
-      }
-    });
+    render = function(comments, container) {
+      var output;
+      output = Mustache.render(defaultTemplate, comments);
+      return container.html(comments);
+    };
     return this.each(function() {
       var $this, url;
       $this = $(_this);

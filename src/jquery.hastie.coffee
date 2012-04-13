@@ -13,7 +13,7 @@ $.fn.hastie = (options) ->
     {{/comments}}
   """
 
-  render: (comments, container) ->
+  render = (comments, container) ->
     output = Mustache.render(defaultTemplate, comments)
     container.html(comments)
 
