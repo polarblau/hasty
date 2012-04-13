@@ -13,19 +13,20 @@
     defaultTemplate = "<ul>\n  {{#comments}}\n    <li>{{body}}</li>\n  {{/comments}}\n</ul>";
     render = function(comments, $container) {
       var output;
+      console.log($container);
       output = Mustache.render(defaultTemplate, {
         comments: comments
       });
-      return $container.html(comments);
+      return $container.html(output);
     };
     return this.each(function() {
-      var $this, url,
-        _this = this;
+      var $this, url;
       $this = $(this);
       url = $this.data('comments-url');
       return $.ajax({
         url: url,
         success: function(comments) {
+          console.log($this, $(this));
           return render(comments.data, $this);
         },
         dataType: 'jsonp'
