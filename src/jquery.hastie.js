@@ -5,28 +5,35 @@
   $ = jQuery;
 
   $.fn.hastie = function(options) {
-    var defaultTemplate, render, settings;
-    settings = $.extend({
-      commentsTemplate: 'foo',
-      commentTemplate: 'bar'
-    });
+    var defaultTemplate, interpolate, render, settings;
+    settings = $.extend({});
     defaultTemplate = "<ul>\n  {{#comments}}\n    <li>{{body}}</li>\n  {{/comments}}\n</ul>";
     render = function(comments, $container) {
       var output;
-      console.log($container);
       output = Mustache.render(defaultTemplate, {
         comments: comments
       });
       return $container.html(output);
     };
+    interpolate = function(string, replacements) {
+      var key, value, _results;
+      _results = [];
+      for (key in replacements) {
+        value = replacements[key];
+        _results.push(string.replace("{" + key + "}", value));
+      }
+      return _results;
+    };
     return this.each(function() {
-      var $this, url;
+      var $this, commitIDs, url;
       $this = $(this);
-      url = $this.data('comments-url');
+      commitIDs = $this.data('commit-ids');
+      url = interpolate($this.data('comments-url'), {
+        sha: commentsIDs[0]
+      });
       return $.ajax({
         url: url,
         success: function(comments) {
-          console.log($this, $(this));
           return render(comments.data, $this);
         },
         dataType: 'jsonp'
