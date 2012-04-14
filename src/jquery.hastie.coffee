@@ -24,7 +24,7 @@ $.fn.hastie = (options) ->
   this.each ->
     $this     = $(this)
     commitIDs = $this.data('commit-ids')
-    url       = interpolate $this.data('comments-url'), sha: commentsIDs[0]
+    url       = interpolate $this.data('comments-url'), sha: commitIDs[0]
 
     $.ajax
       url     : url

@@ -29,7 +29,7 @@
       $this = $(this);
       commitIDs = $this.data('commit-ids');
       url = interpolate($this.data('comments-url'), {
-        sha: commentsIDs[0]
+        sha: commitIDs[0]
       });
       return $.ajax({
         url: url,
