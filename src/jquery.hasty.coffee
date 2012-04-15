@@ -23,6 +23,7 @@ $.fn.hasty = (options) ->
   """
 
   render = (comments, $container) ->
+    console.log(comments)
     output = Mustache.render(defaultTemplate, comments: comments)
     $container.html(output)
 
@@ -38,11 +39,10 @@ $.fn.hasty = (options) ->
     loadAndRender = ->
       unless commitIDs.length <= 0
         commitID = commitIDs.shift()
-        console.log(commitCommentsURL(commitID))
         $.ajax
           url     : commitCommentsURL(commitID)
           success : (response) ->
-            comments.push(response.data)
+            comments.concat(response.data)
             if comments.length < settings.perPage
               loadAndRender()
             else

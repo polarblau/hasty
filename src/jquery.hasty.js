@@ -12,6 +12,7 @@
     defaultTemplate = "<ul>\n  {{#comments}}\n    <li>\n      <span class='author'>\n        <img src='{{user.avatar_url}}' alt='Gravatar' />\n        <strong>{{user.login}}</strong>\n        said:\n      </span>\n      <span class='date'>{{created_at}}</span>\n      <span class='body'>{{body}}</span>\n    </li>\n  {{/comments}}\n</ul>";
     render = function(comments, $container) {
       var output;
+      console.log(comments);
       output = Mustache.render(defaultTemplate, {
         comments: comments
       });
@@ -30,11 +31,10 @@
         var commitID;
         if (!(commitIDs.length <= 0)) {
           commitID = commitIDs.shift();
-          console.log(commitCommentsURL(commitID));
           return $.ajax({
             url: commitCommentsURL(commitID),
             success: function(response) {
-              comments.push(response.data);
+              comments.concat(response.data);
               if (comments.length < settings.perPage) {
                 return loadAndRender();
               } else {
