@@ -5,8 +5,10 @@
   $ = jQuery;
 
   $.fn.hastie = function(options) {
-    var defaultTemplate, interpolate, render, settings;
-    settings = $.extend({});
+    var defaultTemplate, render, settings;
+    settings = $.extend({
+      perPage: 10
+    });
     defaultTemplate = "<ul>\n  {{#comments}}\n    <li>{{body}}</li>\n  {{/comments}}\n</ul>";
     render = function(comments, $container) {
       var output;
@@ -15,29 +17,31 @@
       });
       return $container.html(output);
     };
-    interpolate = function(string, replacements) {
-      var key, value, _results;
-      _results = [];
-      for (key in replacements) {
-        value = replacements[key];
-        _results.push(string.replace("{" + key + "}", value));
-      }
-      return _results;
-    };
     return this.each(function() {
-      var $this, commitIDs, url;
+      var $this, comments, commitCommentsURL, commitIDs, commitsURL, loadAndRender;
       $this = $(this);
+      commitsURL = $this.data('commits-urls');
       commitIDs = $this.data('commit-ids');
-      url = interpolate($this.data('comments-url'), {
-        sha: commitIDs[0]
-      });
-      return $.ajax({
-        url: url,
-        success: function(comments) {
-          return render(comments.data, $this);
-        },
-        dataType: 'jsonp'
-      });
+      comments = [];
+      commitCommentsURL = function(commitID) {
+        return "" + commitsURL + "/" + commitID + "/comments";
+      };
+      return loadAndRender = function() {
+        var commitID;
+        commitID = commitIDs.shift();
+        return $.ajax({
+          url: commitCommentsURL(commitID),
+          success: function(comments) {
+            comments.push(comments.data);
+            if (comments.length < settings.perPage) {
+              return loadAndRender();
+            } else {
+              return render(comments, $this);
+            }
+          },
+          dataType: 'jsonp'
+        });
+      };
     });
   };
 

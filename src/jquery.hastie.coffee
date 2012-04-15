@@ -2,7 +2,8 @@ $ = jQuery
 
 $.fn.hastie = (options) ->
 
-  settings = $.extend {}
+  settings = $.extend
+    perPage: 10
 
   defaultTemplate =
   """
@@ -17,18 +18,23 @@ $.fn.hastie = (options) ->
     output = Mustache.render(defaultTemplate, comments: comments)
     $container.html(output)
 
-  interpolate = (string, replacements) ->
-    for key, value of replacements
-      string.replace("{#{key}}", value)
-
   this.each ->
-    $this     = $(this)
-    commitIDs = $this.data('commit-ids')
-    url       = interpolate $this.data('comments-url'), sha: commitIDs[0]
+    $this         = $(this)
+    commitsURL    = $this.data('commits-urls')
+    commitIDs     = $this.data('commit-ids')
+    comments      = []
 
-    $.ajax
-      url     : url
-      success : (comments) ->
-        render(comments.data, $this)
-      dataType: 'jsonp'
+    commitCommentsURL = (commitID) ->
+      "#{commitsURL}/#{commitID}/comments"
 
+    loadAndRender = ->
+      commitID = commitIDs.shift()
+      $.ajax
+        url     : commitCommentsURL(commitID)
+        success : (comments) ->
+          comments.push(comments.data)
+          if comments.length < settings.perPage
+            loadAndRender()
+          else
+            render(comments, $this)
+        dataType: 'jsonp'
