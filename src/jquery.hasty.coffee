@@ -1,6 +1,6 @@
 $ = jQuery
 
-$.fn.hastie = (options) ->
+$.fn.hasty = (options) ->
 
   settings = $.extend
     perPage: 10
