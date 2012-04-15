@@ -36,10 +36,9 @@
             success: function(response) {
               comments.concat(response.data);
               if (comments.length < settings.perPage) {
-                return loadAndRender();
-              } else {
-                return render(comments, $this);
+                loadAndRender();
               }
+              return render(comments, $this);
             },
             dataType: 'jsonp'
           });

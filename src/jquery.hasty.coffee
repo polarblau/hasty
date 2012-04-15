@@ -45,8 +45,7 @@ $.fn.hasty = (options) ->
             comments.concat(response.data)
             if comments.length < settings.perPage
               loadAndRender()
-            else
-              render(comments, $this)
+            render(comments, $this)
           dataType: 'jsonp'
 
     loadAndRender()
