@@ -48,10 +48,15 @@ Defaults to the `data-commit-ids` attribute of the selected element.
 #### template *[String|Object]*
 
 The template used by the *renderer* to display the comments. Supply a
-custom templat as string or a jQuery object to read the contents of e.g.
+custom template as string, a URL (to load the template via AJAX) or a jQuery object to read the contents of e.g.
 a `script` tag.
 
-A default template is included in the default theme.
+A default template is included in the default theme which will be loaded
+from
+
+```
+/hasty/themes/default/template.mustache
+```
 
 #### renderer *[Object]*
 
