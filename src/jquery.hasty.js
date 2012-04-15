@@ -26,9 +26,10 @@
       commitCommentsURL = function(commitID) {
         return "" + commitsURL + "/" + commitID + "/comments";
       };
-      return loadAndRender = function() {
+      loadAndRender = function() {
         var commitID;
         commitID = commitIDs.shift();
+        console.log(commitCommentsURL(commitID));
         return $.ajax({
           url: commitCommentsURL(commitID),
           success: function(comments) {
@@ -42,6 +43,7 @@
           dataType: 'jsonp'
         });
       };
+      return loadAndRender();
     });
   };
 

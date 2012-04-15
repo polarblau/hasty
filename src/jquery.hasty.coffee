@@ -29,6 +29,7 @@ $.fn.hasty = (options) ->
 
     loadAndRender = ->
       commitID = commitIDs.shift()
+      console.log(commitCommentsURL(commitID))
       $.ajax
         url     : commitCommentsURL(commitID)
         success : (comments) ->
@@ -38,3 +39,5 @@ $.fn.hasty = (options) ->
           else
             render(comments, $this)
         dataType: 'jsonp'
+
+    loadAndRender()
