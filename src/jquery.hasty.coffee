@@ -32,8 +32,8 @@ $.fn.hasty = (options) ->
       console.log(commitCommentsURL(commitID))
       $.ajax
         url     : commitCommentsURL(commitID)
-        success : (comments) ->
-          comments.push(comments.data)
+        success : (response) ->
+          comments.push(response.data)
           if comments.length < settings.perPage
             loadAndRender()
           else

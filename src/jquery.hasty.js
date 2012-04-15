@@ -32,8 +32,8 @@
         console.log(commitCommentsURL(commitID));
         return $.ajax({
           url: commitCommentsURL(commitID),
-          success: function(comments) {
-            comments.push(comments.data);
+          success: function(response) {
+            comments.push(response.data);
             if (comments.length < settings.perPage) {
               return loadAndRender();
             } else {
