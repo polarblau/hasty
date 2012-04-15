@@ -23,7 +23,6 @@ $.fn.hasty = (options) ->
   """
 
   render = (comments, $container) ->
-    console.log(comments)
     output = Mustache.render(defaultTemplate, comments: comments)
     $container.html(output)
 
@@ -46,6 +45,7 @@ $.fn.hasty = (options) ->
             if comments.length < settings.perPage
               loadAndRender()
             render(comments, $this)
+            # TODO: if still more loading happening, indicate
           dataType: 'jsonp'
 
     loadAndRender()
