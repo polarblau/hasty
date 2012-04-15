@@ -9,7 +9,15 @@ $.fn.hasty = (options) ->
   """
     <ul>
       {{#comments}}
-        <li>{{body}}</li>
+        <li>
+          <span class='author'>
+            <img src='{{user.avatar_url}}' alt='Gravatar' />
+            <strong>{{user.login}}</strong>
+            said:
+          </span>
+          <span class='date'>{{created_at}}</span>
+          <span class='body'>{{body}}</span>
+        </li>
       {{/comments}}
     </ul>
   """
@@ -28,16 +36,17 @@ $.fn.hasty = (options) ->
       "#{commitsURL}/#{commitID}/comments"
 
     loadAndRender = ->
-      commitID = commitIDs.shift()
-      console.log(commitCommentsURL(commitID))
-      $.ajax
-        url     : commitCommentsURL(commitID)
-        success : (response) ->
-          comments.push(response.data)
-          if comments.length < settings.perPage
-            loadAndRender()
-          else
-            render(comments, $this)
-        dataType: 'jsonp'
+      unless commitIDs.length <= 0
+        commitID = commitIDs.shift()
+        console.log(commitCommentsURL(commitID))
+        $.ajax
+          url     : commitCommentsURL(commitID)
+          success : (response) ->
+            comments.push(response.data)
+            if comments.length < settings.perPage
+              loadAndRender()
+            else
+              render(comments, $this)
+          dataType: 'jsonp'
 
     loadAndRender()
