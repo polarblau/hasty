@@ -4,7 +4,7 @@
 
   $ = jQuery;
 
-  $.fn.hastie = function(options) {
+  $.fn.hasty = function(options) {
     var defaultTemplate, render, settings;
     settings = $.extend({
       perPage: 10
