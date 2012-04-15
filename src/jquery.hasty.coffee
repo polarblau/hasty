@@ -20,7 +20,7 @@ $.fn.hasty = (options) ->
 
   this.each ->
     $this         = $(this)
-    commitsURL    = $this.data('commits-urls')
+    commitsURL    = $this.data('commits-url')
     commitIDs     = $this.data('commit-ids')
     comments      = []
 

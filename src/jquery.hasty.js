@@ -20,7 +20,7 @@
     return this.each(function() {
       var $this, comments, commitCommentsURL, commitIDs, commitsURL, loadAndRender;
       $this = $(this);
-      commitsURL = $this.data('commits-urls');
+      commitsURL = $this.data('commits-url');
       commitIDs = $this.data('commit-ids');
       comments = [];
       commitCommentsURL = function(commitID) {
