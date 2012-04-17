@@ -26,17 +26,17 @@ If you're using the [jekyll-hasty gem](https://github.com/polarblau/jekyll-hasty
 
 ### Options
 
-#### commitsURL *[String]*
+#### githubUser *[String]*
 
-Github [API path to commits](http://developer.github.com/v3/repos/commits/) for repository.
+Github user name.
 
-Example:
+Defaults to the `data-github-user` attribute of the selected element.
 
-```
-https://api.github.com/repos/polarblau/jekyll-hasty-test-blog/commits
-```
+#### githubRepo *[String]*
 
-Defaults to the `data-commits-url` attribute of the selected element.
+Github repository name.
+
+Defaults to the `data-github-repo` attribute of the selected element.
 
 #### commitIDs *[Array]*
 

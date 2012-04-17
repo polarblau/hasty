@@ -3,41 +3,60 @@ $ = jQuery
 $.fn.hasty = (options) ->
 
   settings = $.extend
-    perPage: 10
+    renderer  : Mustache
+    template  : '/hasty/themes/default/template.mustache'
+    githubUser: null
+    githubRepo: null
+    commitIDs : null
+    commitsURL: null
+    perPage   : 10
 
-  defaultTemplate =
-  """
-    <ul>
-      {{#comments}}
-        <li>
-          <span class='author'>
-            <img src='{{user.avatar_url}}' alt='Gravatar' />
-            <strong>{{user.login}}</strong>
-            said:
-          </span>
-          <span class='date'>{{created_at}}</span>
-          <span class='body'>{{body}}</span>
-        </li>
-      {{/comments}}
-    </ul>
-  """
+  template = ->
+    # resolve, load, cache template
+
+  loadTemplate = (url) ->
+    # load template if settings.template is path
+
+  validateSettings = ->
+    # check settings and throw errors if invalid
+    # does the renderer implement #render?
+    # return true if valid
+    true
 
   render = (comments, $container) ->
-    output = Mustache.render(defaultTemplate, comments: comments)
+    output = settings.renderer.render(defaultTemplate, comments: comments)
     $container.html(output)
 
+
   this.each ->
-    $this         = $(this)
-    commitsURL    = $this.data('commits-url')
-    commitIDs     = $this.data('commit-ids')
-    comments      = []
+
+    $this      = $(this)
+    commitIDs  = settings.commitIDs  || $this.data('commit-ids')
+    githubUser = settings.githubUser || $this.data('github-user')
+    githubRepo = settings.githubRepo || $this.data('github-repo')
+    comments   = []
+
+    githubRepoURL = ->
+      "https://api.github.com/repos/#{githubUser}/#{githubRepo}"
+
+    commitURL = (commitID) ->
+      "#{githubRepoURL()}/#{commitID}"
 
     commitCommentsURL = (commitID) ->
-      "#{commitsURL}/#{commitID}/comments"
+      "#{commitURL(commitID)}/comments"
+
+    loadCommits = ->
+      # loop through commit IDs
+      # load commit information from github
+
+    loadComments = ->
+      # loop through commits and load comments
+      # until page is full
 
     loadAndRender = ->
       unless commitIDs.length <= 0
         commitID = commitIDs.shift()
+        # TODO: First load commits, then comments
         $.ajax
           url     : commitCommentsURL(commitID)
           success : (response) ->
