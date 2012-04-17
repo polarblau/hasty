@@ -5,27 +5,61 @@
   $ = jQuery;
 
   $.fn.hasty = function(options) {
-    var defaultTemplate, render, settings;
+    var loadTemplate, render, settings, template, validateSettings;
     settings = $.extend({
+      renderer: Mustache,
+      template: '/hasty/themes/default/template.mustache',
+      githubUser: null,
+      githubRepo: null,
+      commitIDs: null,
+      commitsURL: null,
       perPage: 10
     });
-    defaultTemplate = "<ul>\n  {{#comments}}\n    <li>\n      <span class='author'>\n        <img src='{{user.avatar_url}}' alt='Gravatar' />\n        <strong>{{user.login}}</strong>\n        said:\n      </span>\n      <span class='date'>{{created_at}}</span>\n      <span class='body'>{{body}}</span>\n    </li>\n  {{/comments}}\n</ul>";
+    template = function() {};
+    loadTemplate = function(url) {};
+    validateSettings = function() {
+      return true;
+    };
     render = function(comments, $container) {
       var output;
-      output = Mustache.render(defaultTemplate, {
+      output = settings.renderer.render(defaultTemplate, {
         comments: comments
       });
       return $container.html(output);
     };
     return this.each(function() {
-      var $this, comments, commitCommentsURL, commitIDs, commitsURL, loadAndRender;
+      var $this, comments, commitIDs, github, loadAndRender, loadComments, loadCommits;
       $this = $(this);
-      commitsURL = $this.data('commits-url');
-      commitIDs = $this.data('commit-ids');
+      commitIDs = settings.commitIDs || $this.data('commit-ids');
       comments = [];
-      commitCommentsURL = function(commitID) {
-        return "" + commitsURL + "/" + commitID + "/comments";
+      github = {
+        user: settings.githubUser || $this.data('github-user'),
+        repo: settings.githubRepo || $this.data('github-repo'),
+        API: {
+          repo: function() {
+            return "https://api.github.com/repos/" + this.user + "/" + this.repo;
+          },
+          commit: function(commitID) {
+            return "" + (githubAPI.repo()) + "/" + commitID;
+          },
+          commitComments: function(commitID) {
+            return "" + (github.commit(commitID)) + "/comments";
+          }
+        },
+        web: {
+          repo: function() {
+            return "https://github.com/" + this.user + "/" + this.repo;
+          },
+          commitComments: function(commitID) {
+            return "" + (github.repo()) + "/commit/" + commitID + "#comments";
+          },
+          commitComment: function(commitID, commentID) {
+            return "" + (github.repo()) + "/commit/" + commitID + "#commitcomment-" + commentID;
+          }
+        }
       };
+      loadCommits = function() {};
+      loadComments = function() {};
       loadAndRender = function() {
         var commitID;
         if (!(commitIDs.length <= 0)) {

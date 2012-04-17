@@ -32,18 +32,35 @@ $.fn.hasty = (options) ->
 
     $this      = $(this)
     commitIDs  = settings.commitIDs  || $this.data('commit-ids')
-    githubUser = settings.githubUser || $this.data('github-user')
-    githubRepo = settings.githubRepo || $this.data('github-repo')
+    #githubUser = settings.githubUser || $this.data('github-user')
+    #githubRepo = settings.githubRepo || $this.data('github-repo')
     comments   = []
 
-    githubRepoURL = ->
-      "https://api.github.com/repos/#{githubUser}/#{githubRepo}"
+    # PATH helpers
+    github =
+      user: settings.githubUser || $this.data('github-user')
+      repo: settings.githubRepo || $this.data('github-repo')
 
-    commitURL = (commitID) ->
-      "#{githubRepoURL()}/#{commitID}"
+      API:
+        repo: ->
+          "https://api.github.com/repos/#{@user}/#{@repo}"
 
-    commitCommentsURL = (commitID) ->
-      "#{commitURL(commitID)}/comments"
+        commit: (commitID) ->
+          "#{githubAPI.repo()}/#{commitID}"
+
+        commitComments: (commitID) ->
+          "#{github.commit(commitID)}/comments"
+
+      web:
+        repo: ->
+          "https://github.com/#{@user}/#{@repo}"
+
+        commitComments: (commitID) ->
+          "#{github.repo()}/commit/#{commitID}#comments"
+
+        commitComment: (commitID, commentID) ->
+          "#{github.repo()}/commit/#{commitID}#commitcomment-#{commentID}"
+
 
     loadCommits = ->
       # loop through commit IDs
@@ -52,6 +69,8 @@ $.fn.hasty = (options) ->
     loadComments = ->
       # loop through commits and load comments
       # until page is full
+
+      # load first commit —> load 0 – 10 comments for commit
 
     loadAndRender = ->
       unless commitIDs.length <= 0
