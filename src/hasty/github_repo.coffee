@@ -1,4 +1,4 @@
-class Github
+class GithubRepo
 
   constructor: (user, repo) ->
     [@user, @repo] = [user, repo]
@@ -25,4 +25,4 @@ class Github
 
 
 window['Hasty'] ||= {}
-window['Hasty']['Github'] = Github
+window['Hasty']['GithubRepo'] = GithubRepo
