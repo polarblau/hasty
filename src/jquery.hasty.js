@@ -48,8 +48,8 @@
       success = function(data) {
         return console.log(data);
       };
-      error = function() {
-        return console.log(arguments);
+      error = function(request, status, error) {
+        return console.log(status, error);
       };
       _results = [];
       for (_i = 0, _len = commitIDs.length; _i < _len; _i++) {

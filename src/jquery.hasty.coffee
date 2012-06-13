@@ -48,7 +48,7 @@ $.fn.hasty = (options) ->
 
     commitIDs = settings.commitIDs || $this.data('commit-ids')
     success = (data) -> console.log(data)
-    error = -> console.log arguments
+    error = (request, status, error) -> console.log status, error
     for id in commitIDs
       loadCommit id, success, error
 
