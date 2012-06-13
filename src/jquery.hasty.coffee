@@ -7,23 +7,23 @@ $.fn.hasty = (options) ->
     template  : """
       <ul>
         {{#commits}}
-          <li>
-            <span>{{id}}</span>
-
-            {{#comments}}
-              <span class='author'>
-                <img src='{{user.avatar_url}}' alt='Gravatar' />
-                <strong>{{user.login}}</strong>
-                said:
-              </span>
-              <span class='date'>{{created_at}}</span>
-              <span class='body'>{{body}}</span>
-            {{/comments}}
-
-            {{^comments}}
-              <strong class="empty">Sorry, no comments for this commit.</strong>
-            {{/comments}}
-
+          <li data-commit-id="{{id}}">
+            <ul>
+              {{#comments}}
+                <li>
+                  <span class='author'>
+                    <img src='{{user.avatar_url}}' alt='Gravatar' />
+                    <strong>{{user.login}}</strong>
+                    said:
+                  </span>
+                  <span class='date'>{{created_at}}</span>
+                  <span class='body'>{{body}}</span>
+                </li>
+              {{/comments}}
+              {{^comments}}
+                <li class="empty">Sorry, no comments for this commit.</li>
+              {{/comments}}
+            </ul>
           </li>
         {{/commits}}
       </ul>
@@ -40,6 +40,7 @@ $.fn.hasty = (options) ->
   # TODO: parse data-commits-url if existing, regexp
   # move api roots into vars
 
+  # TODO: Remove what we don't use
   repoAPIURL = ->
     "https://api.github.com/repos/#{settings.githubUser}/#{settings.githubRepo}"
 
@@ -63,7 +64,7 @@ $.fn.hasty = (options) ->
       dataType: 'jsonp'
 
   findCommitByID = (haystack, id) ->
-    (collection for name in haystack when collection.id == id)
+    collection for name in haystack when collection.id == id
 
   # --
 
@@ -88,10 +89,12 @@ $.fn.hasty = (options) ->
 
     commentRequests = []
 
+    # add loading class
     for id in commitIDs
       commentRequests.push loadCommentsForCommit(id, success, error)
 
     $.when.apply($, commentRequests).done ->
+      # remove loading class
       html = settings.renderer.render settings.template,
         commits: commits
       $this.html html
