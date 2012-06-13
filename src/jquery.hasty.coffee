@@ -5,19 +5,24 @@ $.fn.hasty = (options) ->
   defaults =
     renderer  : Mustache
     template  : """
-      <ul>
-        {{#comments}}
-          <li>
-            <span class='author'>
-              <img src='{{user.avatar_url}}' alt='Gravatar' />
-              <strong>{{user.login}}</strong>
-              said:
-            </span>
-            <span class='date'>{{created_at}}</span>
-            <span class='body'>{{body}}</span>
-          </li>
-        {{/comments}}
-      </ul>
+      {{#comments?}}
+        <ul>
+          {{#comments}}
+            <li>
+              <span class='author'>
+                <img src='{{user.avatar_url}}' alt='Gravatar' />
+                <strong>{{user.login}}</strong>
+                said:
+              </span>
+              <span class='date'>{{created_at}}</span>
+              <span class='body'>{{body}}</span>
+            </li>
+          {{/comments}}
+        </ul>
+      {{/comments?}}
+      {{^comments}}
+        <p class="empty">Sorry, no comments found.</p>
+      {{/comments}}
     """
     githubUser: null
     githubRepo: null
@@ -72,7 +77,7 @@ $.fn.hasty = (options) ->
       commentRequests.push loadCommentsForCommit(id, success, error)
 
     $.when.apply($, commentRequests).done ->
-      html = settings.renderer.render settings.template, commitComments
+      html = settings.renderer.render settings.template, comments: commitComments
       $this.html html
       #if commits.length
         #for id in commitIDs
