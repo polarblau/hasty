@@ -77,30 +77,5 @@ $.fn.hasty = (options) ->
       commentRequests.push loadCommentsForCommit(id, success, error)
 
     $.when.apply($, commentRequests).done ->
-      html = settings.renderer.render settings.template, comments: commitComments
-      $this.html html
-      #if commits.length
-        #for id in commitIDs
-
-    # create a view and save reference
-    # View = new Hasty.View($this, settings.template)
-
-    # create repository instance and safe reference
-    # Repo = new Hasty.GithubRepo(settings.githubUser, settings.githubRepo)
-
-    # Events
-    # Repo.bind 'fetched', View.render()
-    # View.bind 'load', Repo.fetch()
-
-    # load the first comments
-    # Repo.fetch()
-
-# get commitIDs if not specified
-# get commitsURL if not specified
-# loop through commits, latest first
-#   load commit info
-#     load perPage commits
-#     if more commits available (commits count in commit data?)
-#       load more commits
-#     else
-#       load next commit
+      $this.html settings.renderer.render settings.template,
+        comments: commitComments

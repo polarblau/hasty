@@ -58,11 +58,9 @@
         commentRequests.push(loadCommentsForCommit(id, success, error));
       }
       return $.when.apply($, commentRequests).done(function() {
-        var html;
-        html = settings.renderer.render(settings.template, {
+        return $this.html(settings.renderer.render(settings.template, {
           comments: commitComments
-        });
-        return $this.html(html);
+        }));
       });
     });
   };
