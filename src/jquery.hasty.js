@@ -15,6 +15,7 @@
       commitsURL: null,
       perPage: 10
     });
+    console.log(settings);
     repoAPIURL = function() {
       return "https://api.github.com/repos/" + settings.user + "/" + settings.repo;
     };

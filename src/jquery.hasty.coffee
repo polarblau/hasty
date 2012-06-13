@@ -11,6 +11,8 @@ $.fn.hasty = (options) ->
     commitsURL: null
     perPage   : 10
 
+  console.log settings
+
   # PATH helpers
 
   repoAPIURL = ->
