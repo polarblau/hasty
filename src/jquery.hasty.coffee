@@ -76,11 +76,10 @@ $.fn.hasty = (options) ->
 
     success   = (commitID, comments) ->
       collection = findCommitByID(commits, commitID)
-      console.log collection
-      unless collection?
+      unless collection.length
         commits.push { id: commitID, comments: [] }
         collection = commits[commits.length - 1]
-      console.log collection
+
       collection.comments.concat(comments)
 
     # TODO: error handling for 404/500

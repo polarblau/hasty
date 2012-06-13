@@ -59,15 +59,13 @@
       success = function(commitID, comments) {
         var collection;
         collection = findCommitByID(commits, commitID);
-        console.log(collection);
-        if (collection == null) {
+        if (!collection.length) {
           commits.push({
             id: commitID,
             comments: []
           });
           collection = commits[commits.length - 1];
         }
-        console.log(collection);
         return collection.comments.concat(comments);
       };
       error = function(request, status, error) {};
