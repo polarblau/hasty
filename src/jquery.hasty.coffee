@@ -33,6 +33,8 @@ $.fn.hasty = (options) ->
   settings = $.extend defaults, options
 
   # PATH helpers
+  # TODO: parse data-commits-url if existing, regexp
+  # move api roots into vars
 
   repoAPIURL = ->
     "https://api.github.com/repos/#{settings.githubUser}/#{settings.githubRepo}"
@@ -77,5 +79,8 @@ $.fn.hasty = (options) ->
       commentRequests.push loadCommentsForCommit(id, success, error)
 
     $.when.apply($, commentRequests).done ->
-      $this.html settings.renderer.render settings.template,
+      html = settings.renderer.render settings.template,
         comments: commitComments
+      console.log html
+      cosole.log commitComments
+      $this.html html

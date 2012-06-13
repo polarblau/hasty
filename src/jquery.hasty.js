@@ -58,9 +58,13 @@
         commentRequests.push(loadCommentsForCommit(id, success, error));
       }
       return $.when.apply($, commentRequests).done(function() {
-        return $this.html(settings.renderer.render(settings.template, {
+        var html;
+        html = settings.renderer.render(settings.template, {
           comments: commitComments
-        }));
+        });
+        console.log(html);
+        cosole.log(commitComments);
+        return $this.html(html);
       });
     });
   };
