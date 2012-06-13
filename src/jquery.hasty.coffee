@@ -17,10 +17,10 @@ $.fn.hasty = (options) ->
             <span class='body'>{{body}}</span>
           </li>
         {{/comments}}
+        {{^comments}}
+          <li class="empty">Sorry, no comments found.</li>
+        {{/comments}}
       </ul>
-      {{^comments}}
-        <p class="empty">Sorry, no comments found.</p>
-      {{/comments}}
     """
     githubUser: null
     githubRepo: null
