@@ -6,6 +6,7 @@ $.fn.hasty = (options) ->
     renderer  : Mustache
     template  : """
       <ul>
+        <li>{{comments.length}}</li>
         {{#comments}}
           <li>
             <span class='author'>

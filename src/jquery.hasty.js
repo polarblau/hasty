@@ -8,7 +8,7 @@
     var commitAPIURL, commitCommentsAPIURL, defaults, loadCommentsForCommit, repoAPIURL, repoWebURL, settings;
     defaults = {
       renderer: Mustache,
-      template: "<ul>\n  {{#comments}}\n    <li>\n      <span class='author'>\n        <img src='{{user.avatar_url}}' alt='Gravatar' />\n        <strong>{{user.login}}</strong>\n        said:\n      </span>\n      <span class='date'>{{created_at}}</span>\n      <span class='body'>{{body}}</span>\n    </li>\n  {{/comments}}\n  {{^comments}}\n    <li class=\"empty\">Sorry, no comments found.</li>\n  {{/comments}}\n</ul>",
+      template: "<ul>\n  <li>{{comments.length}}</li>\n  {{#comments}}\n    <li>\n      <span class='author'>\n        <img src='{{user.avatar_url}}' alt='Gravatar' />\n        <strong>{{user.login}}</strong>\n        said:\n      </span>\n      <span class='date'>{{created_at}}</span>\n      <span class='body'>{{body}}</span>\n    </li>\n  {{/comments}}\n  {{^comments}}\n    <li class=\"empty\">Sorry, no comments found.</li>\n  {{/comments}}\n</ul>",
       githubUser: null,
       githubRepo: null,
       commitIDs: null,
