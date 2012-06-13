@@ -5,21 +5,19 @@ $.fn.hasty = (options) ->
   defaults =
     renderer  : Mustache
     template  : """
-      {{#comments?}}
-        <ul>
-          {{#comments}}
-            <li>
-              <span class='author'>
-                <img src='{{user.avatar_url}}' alt='Gravatar' />
-                <strong>{{user.login}}</strong>
-                said:
-              </span>
-              <span class='date'>{{created_at}}</span>
-              <span class='body'>{{body}}</span>
-            </li>
-          {{/comments}}
-        </ul>
-      {{/comments?}}
+      <ul>
+        {{#comments}}
+          <li>
+            <span class='author'>
+              <img src='{{user.avatar_url}}' alt='Gravatar' />
+              <strong>{{user.login}}</strong>
+              said:
+            </span>
+            <span class='date'>{{created_at}}</span>
+            <span class='body'>{{body}}</span>
+          </li>
+        {{/comments}}
+      </ul>
       {{^comments}}
         <p class="empty">Sorry, no comments found.</p>
       {{/comments}}
@@ -82,5 +80,5 @@ $.fn.hasty = (options) ->
       html = settings.renderer.render settings.template,
         comments: commitComments
       console.log html
-      cosole.log commitComments
+      console.log commitComments
       $this.html html
