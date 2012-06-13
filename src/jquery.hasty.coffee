@@ -50,7 +50,7 @@ $.fn.hasty = (options) ->
     success = (data) -> console.log(data)
     error = -> console.log arguments
     for id in commitIDs
-      loadCommit id, (data) -> console.log(data)
+      loadCommit id, success, error
 
     # create a view and save reference
     # View = new Hasty.View($this, settings.template)

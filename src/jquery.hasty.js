@@ -54,9 +54,7 @@
       _results = [];
       for (_i = 0, _len = commitIDs.length; _i < _len; _i++) {
         id = commitIDs[_i];
-        _results.push(loadCommit(id, function(data) {
-          return console.log(data);
-        }));
+        _results.push(loadCommit(id, success, error));
       }
       return _results;
     });
