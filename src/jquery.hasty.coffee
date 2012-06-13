@@ -33,7 +33,7 @@ $.fn.hasty = (options) ->
 
   # REQUEST helpers
 
-  loadCommit = (commitID, success, error) ->
+  loadCommit = (commitID, success = ->, error = ->) ->
     $.ajax
       url     : commitAPIURL(commitID)
       success : success()
