@@ -11,79 +11,65 @@ $.fn.hasty = (options) ->
     commitsURL: null
     perPage   : 10
 
-  template = ->
-    # resolve, load, cache template
+  # PATH helpers
 
-  loadTemplate = (url) ->
-    # load template if settings.template is path
+  repoAPIURL = ->
+    "https://api.github.com/repos/#{settings.user}/#{settings.repo}"
 
-  validateSettings = ->
-    # check settings and throw errors if invalid
-    # does the renderer implement #render?
-    # return true if valid
-    true
+  commitAPIURL = (commitID) ->
+    "#{repoAPIURL()}/#{commitID}"
 
-  render = (comments, $container) ->
-    output = settings.renderer.render(defaultTemplate, comments: comments)
-    $container.html(output)
+  commitCommentsAPIURL = (commitID) ->
+    "#{commitAPIURL(commitID)}/comments"
 
+  repoWebURL = ->
+    "https://github.com/#{settings.user}/#{settings.repo}"
+
+  commitCommentsWebURL = (commitID) ->
+    "#{settings.repoWebURL()}/commit/#{commitID}#comments"
+
+  commitCommentWebURL = (commitID, commentID) ->
+    "#{settings.repoWebURL()}/commit/#{commitID}#commitcomment-#{commentID}"
+
+  # REQUEST helpers
+
+  loadCommit = (commitID, success, error) ->
+    $.ajax
+      url     : commitAPIURL(commitID)
+      success : success()
+      error   : error()
+      dataType: 'jsonp'
+
+  # --
 
   this.each ->
 
-    $this      = $(this)
-    commitIDs  = settings.commitIDs  || $this.data('commit-ids')
-    #githubUser = settings.githubUser || $this.data('github-user')
-    #githubRepo = settings.githubRepo || $this.data('github-repo')
-    comments   = []
+    $this = $(@)
 
-    # PATH helpers
-    github =
-      user: settings.githubUser || $this.data('github-user')
-      repo: settings.githubRepo || $this.data('github-repo')
+    commitIDs = settings.commitIDs || $this.data('commit-ids')
 
-      API:
-        repo: ->
-          "https://api.github.com/repos/#{@user}/#{@repo}"
+    for id in commitIDs
+      loadCommit id, (data) -> console.log(data)
 
-        commit: (commitID) ->
-          "#{githubAPI.repo()}/#{commitID}"
+    # create a view and save reference
+    # View = new Hasty.View($this, settings.template)
 
-        commitComments: (commitID) ->
-          "#{github.commit(commitID)}/comments"
+    # create repository instance and safe reference
+    # Repo = new Hasty.GithubRepo(settings.githubUser, settings.githubRepo)
 
-      web:
-        repo: ->
-          "https://github.com/#{@user}/#{@repo}"
+    # Events
+    # Repo.bind 'fetched', View.render()
+    # View.bind 'load', Repo.fetch()
 
-        commitComments: (commitID) ->
-          "#{github.repo()}/commit/#{commitID}#comments"
+    # load the first comments
+    # Repo.fetch()
 
-        commitComment: (commitID, commentID) ->
-          "#{github.repo()}/commit/#{commitID}#commitcomment-#{commentID}"
-
-
-    loadCommits = ->
-      # loop through commit IDs
-      # load commit information from github
-
-    loadComments = ->
-      # loop through commits and load comments
-      # until page is full
-
-      # load first commit —> load 0 – 10 comments for commit
-
-    loadAndRender = ->
-      unless commitIDs.length <= 0
-        commitID = commitIDs.shift()
-        # TODO: First load commits, then comments
-        $.ajax
-          url     : commitCommentsURL(commitID)
-          success : (response) ->
-            comments = comments.concat(response.data)
-            if comments.length < settings.perPage
-              loadAndRender()
-            render(comments, $this)
-            # TODO: if still more loading happening, indicate
-          dataType: 'jsonp'
-
-    loadAndRender()
+# get commitIDs if not specified
+# get commitsURL if not specified
+# loop through commits, latest first
+#   load commit info
+#     load perPage commits
+#     if more commits available (commits count in commit data?)
+#       load more commits
+#     else
+#       load next commit

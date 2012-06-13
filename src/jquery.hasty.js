@@ -5,7 +5,7 @@
   $ = jQuery;
 
   $.fn.hasty = function(options) {
-    var loadTemplate, render, settings, template, validateSettings;
+    var commitAPIURL, commitCommentWebURL, commitCommentsAPIURL, commitCommentsWebURL, loadCommit, repoAPIURL, repoWebURL, settings;
     settings = $.extend({
       renderer: Mustache,
       template: '/hasty/themes/default/template.mustache',
@@ -15,69 +15,44 @@
       commitsURL: null,
       perPage: 10
     });
-    template = function() {};
-    loadTemplate = function(url) {};
-    validateSettings = function() {
-      return true;
+    repoAPIURL = function() {
+      return "https://api.github.com/repos/" + settings.user + "/" + settings.repo;
     };
-    render = function(comments, $container) {
-      var output;
-      output = settings.renderer.render(defaultTemplate, {
-        comments: comments
+    commitAPIURL = function(commitID) {
+      return "" + (repoAPIURL()) + "/" + commitID;
+    };
+    commitCommentsAPIURL = function(commitID) {
+      return "" + (commitAPIURL(commitID)) + "/comments";
+    };
+    repoWebURL = function() {
+      return "https://github.com/" + settings.user + "/" + settings.repo;
+    };
+    commitCommentsWebURL = function(commitID) {
+      return "" + (settings.repoWebURL()) + "/commit/" + commitID + "#comments";
+    };
+    commitCommentWebURL = function(commitID, commentID) {
+      return "" + (settings.repoWebURL()) + "/commit/" + commitID + "#commitcomment-" + commentID;
+    };
+    loadCommit = function(commitID, success, error) {
+      return $.ajax({
+        url: commitAPIURL(commitID),
+        success: success(),
+        error: error(),
+        dataType: 'jsonp'
       });
-      return $container.html(output);
     };
     return this.each(function() {
-      var $this, comments, commitIDs, github, loadAndRender, loadComments, loadCommits;
+      var $this, commitIDs, id, _i, _len, _results;
       $this = $(this);
       commitIDs = settings.commitIDs || $this.data('commit-ids');
-      comments = [];
-      github = {
-        user: settings.githubUser || $this.data('github-user'),
-        repo: settings.githubRepo || $this.data('github-repo'),
-        API: {
-          repo: function() {
-            return "https://api.github.com/repos/" + this.user + "/" + this.repo;
-          },
-          commit: function(commitID) {
-            return "" + (githubAPI.repo()) + "/" + commitID;
-          },
-          commitComments: function(commitID) {
-            return "" + (github.commit(commitID)) + "/comments";
-          }
-        },
-        web: {
-          repo: function() {
-            return "https://github.com/" + this.user + "/" + this.repo;
-          },
-          commitComments: function(commitID) {
-            return "" + (github.repo()) + "/commit/" + commitID + "#comments";
-          },
-          commitComment: function(commitID, commentID) {
-            return "" + (github.repo()) + "/commit/" + commitID + "#commitcomment-" + commentID;
-          }
-        }
-      };
-      loadCommits = function() {};
-      loadComments = function() {};
-      loadAndRender = function() {
-        var commitID;
-        if (!(commitIDs.length <= 0)) {
-          commitID = commitIDs.shift();
-          return $.ajax({
-            url: commitCommentsURL(commitID),
-            success: function(response) {
-              comments = comments.concat(response.data);
-              if (comments.length < settings.perPage) {
-                loadAndRender();
-              }
-              return render(comments, $this);
-            },
-            dataType: 'jsonp'
-          });
-        }
-      };
-      return loadAndRender();
+      _results = [];
+      for (_i = 0, _len = commitIDs.length; _i < _len; _i++) {
+        id = commitIDs[_i];
+        _results.push(loadCommit(id, function(data) {
+          return console.log(data);
+        }));
+      }
+      return _results;
     });
   };
 
