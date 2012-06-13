@@ -6,21 +6,26 @@ $.fn.hasty = (options) ->
     renderer  : Mustache
     template  : """
       <ul>
-        <li>{{comments.length}}</li>
-        {{#comments}}
+        {{#commits}}
           <li>
-            <span class='author'>
-              <img src='{{user.avatar_url}}' alt='Gravatar' />
-              <strong>{{user.login}}</strong>
-              said:
-            </span>
-            <span class='date'>{{created_at}}</span>
-            <span class='body'>{{body}}</span>
+            <span>{{id}}</span>
+
+            {{comments}}
+              <span class='author'>
+                <img src='{{user.avatar_url}}' alt='Gravatar' />
+                <strong>{{user.login}}</strong>
+                said:
+              </span>
+              <span class='date'>{{created_at}}</span>
+              <span class='body'>{{body}}</span>
+            {{/comments}}
+
+            {{^comments}}
+              <strong class="empty">Sorry, no comments for this commit.</strong>
+            {{/comments}}
+
           </li>
-        {{/comments}}
-        {{^comments}}
-          <li class="empty">Sorry, no comments found.</li>
-        {{/comments}}
+        {{/commits}}
       </ul>
     """
     githubUser: null
@@ -57,21 +62,28 @@ $.fn.hasty = (options) ->
       error   : error if error?
       dataType: 'jsonp'
 
+  findCommitByID = (haystack, id) ->
+    (collection for name in haystack when collection.id == id)
 
   # --
 
   this.each ->
 
     $this = $(@)
+    #[{id:1, comments: []}]
+    commitIDs = settings.commitIDs || $this.data('commit-ids')
+    commits   = []
 
-    commitIDs       = settings.commitIDs || $this.data('commit-ids')
-    commitComments  = {}
-    success         = (commitID, comments) ->
-      commitComments[commitID] ?= []
-      commitComments[commitID].concat(comments)
+    success   = (commitID, comments) ->
+      collection = findCommitByID(commits, commitID)
+      unless collection?
+        commits.push { id: commitID, comments: [] }
+        collection = commits[commits.length - 1]
+      collection.comments.concat(comments)
 
     # TODO: error handling for 404/500
     error           = (request, status, error) ->
+
     commentRequests = []
 
     for id in commitIDs
@@ -79,7 +91,7 @@ $.fn.hasty = (options) ->
 
     $.when.apply($, commentRequests).done ->
       html = settings.renderer.render settings.template,
-        comments: commitComments
+        commits: commits
       console.log html
-      console.log commitComments
+      console.log commits
       $this.html html

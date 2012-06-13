@@ -5,10 +5,10 @@
   $ = jQuery;
 
   $.fn.hasty = function(options) {
-    var commitAPIURL, commitCommentsAPIURL, defaults, loadCommentsForCommit, repoAPIURL, repoWebURL, settings;
+    var commitAPIURL, commitCommentsAPIURL, defaults, findCommitByID, loadCommentsForCommit, repoAPIURL, repoWebURL, settings;
     defaults = {
       renderer: Mustache,
-      template: "<ul>\n  <li>{{comments.length}}</li>\n  {{#comments}}\n    <li>\n      <span class='author'>\n        <img src='{{user.avatar_url}}' alt='Gravatar' />\n        <strong>{{user.login}}</strong>\n        said:\n      </span>\n      <span class='date'>{{created_at}}</span>\n      <span class='body'>{{body}}</span>\n    </li>\n  {{/comments}}\n  {{^comments}}\n    <li class=\"empty\">Sorry, no comments found.</li>\n  {{/comments}}\n</ul>",
+      template: "<ul>\n  {{#commits}}\n    <li>\n      <span>{{id}}</span>\n\n      {{comments}}\n        <span class='author'>\n          <img src='{{user.avatar_url}}' alt='Gravatar' />\n          <strong>{{user.login}}</strong>\n          said:\n        </span>\n        <span class='date'>{{created_at}}</span>\n        <span class='body'>{{body}}</span>\n      {{/comments}}\n\n      {{^comments}}\n        <strong class=\"empty\">Sorry, no comments for this commit.</strong>\n      {{/comments}}\n\n    </li>\n  {{/commits}}\n</ul>",
       githubUser: null,
       githubRepo: null,
       commitIDs: null,
@@ -40,16 +40,33 @@
         dataType: 'jsonp'
       });
     };
+    findCommitByID = function(haystack, id) {
+      var name, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = haystack.length; _i < _len; _i++) {
+        name = haystack[_i];
+        if (collection.id === id) {
+          _results.push(collection);
+        }
+      }
+      return _results;
+    };
     return this.each(function() {
-      var $this, commentRequests, commitComments, commitIDs, error, id, success, _i, _len;
+      var $this, commentRequests, commitIDs, commits, error, id, success, _i, _len;
       $this = $(this);
       commitIDs = settings.commitIDs || $this.data('commit-ids');
-      commitComments = {};
+      commits = [];
       success = function(commitID, comments) {
-        if (commitComments[commitID] == null) {
-          commitComments[commitID] = [];
+        var collection;
+        collection = findCommitByID(commits, commitID);
+        if (collection == null) {
+          commits.push({
+            id: commitID,
+            comments: []
+          });
+          collection = commits[commits.length - 1];
         }
-        return commitComments[commitID].concat(comments);
+        return collection.comments.concat(comments);
       };
       error = function(request, status, error) {};
       commentRequests = [];
@@ -60,10 +77,10 @@
       return $.when.apply($, commentRequests).done(function() {
         var html;
         html = settings.renderer.render(settings.template, {
-          comments: commitComments
+          commits: commits
         });
         console.log(html);
-        console.log(commitComments);
+        console.log(commits);
         return $this.html(html);
       });
     });
