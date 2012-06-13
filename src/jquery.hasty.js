@@ -36,8 +36,8 @@
     loadCommit = function(commitID, success, error) {
       return $.ajax({
         url: commitAPIURL(commitID),
-        success: success(),
-        error: error(),
+        success: success != null ? success() : void 0,
+        error: error != null ? error() : void 0,
         dataType: 'jsonp'
       });
     };
