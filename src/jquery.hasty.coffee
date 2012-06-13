@@ -57,7 +57,7 @@ $.fn.hasty = (options) ->
     for id in commitIDs
       commentRequests.push loadCommentsForCommit(id, success, error)
 
-    $.when.apply($, commitRequests).done ->
+    $.when.apply($, commentRequests).done ->
       console.log commitComments
       #if commits.length
         #for id in commitIDs

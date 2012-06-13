@@ -57,7 +57,7 @@
         id = commitIDs[_i];
         commentRequests.push(loadCommentsForCommit(id, success, error));
       }
-      return $.when.apply($, commitRequests).done(function() {
+      return $.when.apply($, commentRequests).done(function() {
         return console.log(commitComments);
       });
     });
