@@ -10,7 +10,7 @@ $.fn.hasty = (options) ->
           <li>
             <span>{{id}}</span>
 
-            {{comments}}
+            {{#comments}}
               <span class='author'>
                 <img src='{{user.avatar_url}}' alt='Gravatar' />
                 <strong>{{user.login}}</strong>
