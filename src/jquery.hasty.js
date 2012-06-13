@@ -18,7 +18,7 @@
     settings = $.extend(defaults, options);
     console.log(settings);
     repoAPIURL = function() {
-      return "https://api.github.com/repos/" + settings.user + "/" + settings.repo;
+      return "https://api.github.com/repos/" + settings.githubUser + "/" + settings.githubRepo;
     };
     commitAPIURL = function(commitID) {
       return "" + (repoAPIURL()) + "/" + commitID;
@@ -27,13 +27,13 @@
       return "" + (commitAPIURL(commitID)) + "/comments";
     };
     repoWebURL = function() {
-      return "https://github.com/" + settings.user + "/" + settings.repo;
+      return "https://github.com/" + settings.githubUser + "/" + settings.githubRepo;
     };
     commitCommentsWebURL = function(commitID) {
-      return "" + (settings.repoWebURL()) + "/commit/" + commitID + "#comments";
+      return "" + (settings.githubRepoWebURL()) + "/commit/" + commitID + "#comments";
     };
     commitCommentWebURL = function(commitID, commentID) {
-      return "" + (settings.repoWebURL()) + "/commit/" + commitID + "#commitcomment-" + commentID;
+      return "" + (settings.githubRepoWebURL()) + "/commit/" + commitID + "#commitcomment-" + commentID;
     };
     loadCommit = function(commitID, success, error) {
       return $.ajax({

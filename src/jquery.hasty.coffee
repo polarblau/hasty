@@ -17,7 +17,7 @@ $.fn.hasty = (options) ->
   # PATH helpers
 
   repoAPIURL = ->
-    "https://api.github.com/repos/#{settings.user}/#{settings.repo}"
+    "https://api.github.com/repos/#{settings.githubUser}/#{settings.githubRepo}"
 
   commitAPIURL = (commitID) ->
     "#{repoAPIURL()}/#{commitID}"
@@ -26,13 +26,13 @@ $.fn.hasty = (options) ->
     "#{commitAPIURL(commitID)}/comments"
 
   repoWebURL = ->
-    "https://github.com/#{settings.user}/#{settings.repo}"
+    "https://github.com/#{settings.githubUser}/#{settings.githubRepo}"
 
   commitCommentsWebURL = (commitID) ->
-    "#{settings.repoWebURL()}/commit/#{commitID}#comments"
+    "#{settings.githubRepoWebURL()}/commit/#{commitID}#comments"
 
   commitCommentWebURL = (commitID, commentID) ->
-    "#{settings.repoWebURL()}/commit/#{commitID}#commitcomment-#{commentID}"
+    "#{settings.githubRepoWebURL()}/commit/#{commitID}#commitcomment-#{commentID}"
 
   # REQUEST helpers
 
