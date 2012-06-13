@@ -5,7 +5,7 @@
   $ = jQuery;
 
   $.fn.hasty = function(options) {
-    var commitAPIURL, commitCommentWebURL, commitCommentsAPIURL, commitCommentsWebURL, defaults, loadCommit, repoAPIURL, repoWebURL, settings;
+    var commitAPIURL, commitCommentsAPIURL, defaults, loadCommentsForCommit, repoAPIURL, repoWebURL, settings;
     defaults = {
       renderer: Mustache,
       template: '/hasty/themes/default/template.mustache',
@@ -16,7 +16,6 @@
       perPage: 10
     };
     settings = $.extend(defaults, options);
-    console.log(settings);
     repoAPIURL = function() {
       return "https://api.github.com/repos/" + settings.githubUser + "/" + settings.githubRepo;
     };
@@ -29,37 +28,37 @@
     repoWebURL = function() {
       return "https://github.com/" + settings.githubUser + "/" + settings.githubRepo;
     };
-    commitCommentsWebURL = function(commitID) {
-      return "" + (settings.githubRepoWebURL()) + "/commit/" + commitID + "#comments";
-    };
-    commitCommentWebURL = function(commitID, commentID) {
-      return "" + (settings.githubRepoWebURL()) + "/commit/" + commitID + "#commitcomment-" + commentID;
-    };
-    loadCommit = function(commitID, success, error) {
+    loadCommentsForCommit = function(commitID, success, error) {
       return $.ajax({
-        url: commitAPIURL(commitID),
-        success: success != null ? success : void 0,
+        url: commitCommentsAPIURL(commitID),
+        success: function(comments) {
+          if (success != null) {
+            return success(commitID, comments);
+          }
+        },
         error: error != null ? error : void 0,
         dataType: 'jsonp'
       });
     };
     return this.each(function() {
-      var $this, commitIDs, commitRequests, commits, error, id, success, _i, _len;
+      var $this, commentRequests, commitComments, commitIDs, error, id, success, _i, _len;
       $this = $(this);
       commitIDs = settings.commitIDs || $this.data('commit-ids');
-      commits = [];
-      success = function(commit) {
-        return commits.push(commit);
+      commitComments = {};
+      success = function(commitID, comments) {
+        if (commitComments[commitID] == null) {
+          commitComments[commitID] = [];
+        }
+        return commitComments[commitID].concat(comments);
       };
       error = function(request, status, error) {};
-      commitRequests = [];
+      commentRequests = [];
       for (_i = 0, _len = commitIDs.length; _i < _len; _i++) {
         id = commitIDs[_i];
-        commitRequests.push(loadCommit(id, success, error));
+        commentRequests.push(loadCommentsForCommit(id, success, error));
       }
       return $.when.apply($, commitRequests).done(function() {
-        console.log(commits.length);
-        return console.log('all done');
+        return console.log(commitComments);
       });
     });
   };

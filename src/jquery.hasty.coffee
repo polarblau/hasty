@@ -12,7 +12,6 @@ $.fn.hasty = (options) ->
     perPage   : 10
 
   settings = $.extend defaults, options
-  console.log settings
 
   # PATH helpers
 
@@ -28,20 +27,16 @@ $.fn.hasty = (options) ->
   repoWebURL = ->
     "https://github.com/#{settings.githubUser}/#{settings.githubRepo}"
 
-  commitCommentsWebURL = (commitID) ->
-    "#{settings.githubRepoWebURL()}/commit/#{commitID}#comments"
-
-  commitCommentWebURL = (commitID, commentID) ->
-    "#{settings.githubRepoWebURL()}/commit/#{commitID}#commitcomment-#{commentID}"
-
   # REQUEST helpers
 
-  loadCommit = (commitID, success, error) ->
+  loadCommentsForCommit = (commitID, success, error) ->
     $.ajax
-      url     : commitAPIURL(commitID)
-      success : success if success?
+      url     : commitCommentsAPIURL(commitID)
+      success : (comments) ->
+        success(commitID, comments) if success?
       error   : error if error?
       dataType: 'jsonp'
+
 
   # --
 
@@ -49,20 +44,23 @@ $.fn.hasty = (options) ->
 
     $this = $(@)
 
-    commitIDs      = settings.commitIDs || $this.data('commit-ids')
-    commits        = []
-    success        = (commit) -> commits.push commit
+    commitIDs       = settings.commitIDs || $this.data('commit-ids')
+    commitComments  = {}
+    success         = (commitID, comments) ->
+      commitComments[commitID] ?= []
+      commitComments[commitID].concat(comments)
+
     # TODO: error handling for 404/500
-    error          = (request, status, error) ->
-    commitRequests = []
+    error           = (request, status, error) ->
+    commentRequests = []
 
     for id in commitIDs
-      commitRequests.push loadCommit(id, success, error)
+      commentRequests.push loadCommentsForCommit(id, success, error)
 
     $.when.apply($, commitRequests).done ->
-      console.log commits.length
-      console.log('all done')
-
+      console.log commitComments
+      #if commits.length
+        #for id in commitIDs
 
     # create a view and save reference
     # View = new Hasty.View($this, settings.template)
