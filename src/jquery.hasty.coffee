@@ -79,9 +79,9 @@ $.fn.hasty = (options) ->
       unless collection.length
         commits.push { id: commitID, comments: [] }
         collection = commits[commits.length - 1]
-
-      collection.comments.concat(comments.data)
-      console.log comments, collection
+      # TODO: "make" proper data collection with user provided methods etc.
+      collection.comments = collection.comments.concat(comments.data)
+      console.log comments, collection, comments.data
 
     # TODO: error handling for 404/500
     error           = (request, status, error) ->
@@ -94,6 +94,4 @@ $.fn.hasty = (options) ->
     $.when.apply($, commentRequests).done ->
       html = settings.renderer.render settings.template,
         commits: commits
-      console.log html
-      console.log commits
       $this.html html

@@ -66,8 +66,8 @@
           });
           collection = commits[commits.length - 1];
         }
-        collection.comments.concat(comments.data);
-        return console.log(comments, collection);
+        collection.comments = collection.comments.concat(comments.data);
+        return console.log(comments, collection, comments.data);
       };
       error = function(request, status, error) {};
       commentRequests = [];
@@ -80,8 +80,6 @@
         html = settings.renderer.render(settings.template, {
           commits: commits
         });
-        console.log(html);
-        console.log(commits);
         return $this.html(html);
       });
     });
