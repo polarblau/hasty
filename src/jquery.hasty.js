@@ -66,7 +66,7 @@
           });
           collection = commits[commits.length - 1];
         }
-        collection.comments.concat(comments);
+        collection.comments.concat(comments.data);
         return console.log(comments, collection);
       };
       error = function(request, status, error) {};

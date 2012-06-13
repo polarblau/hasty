@@ -80,7 +80,7 @@ $.fn.hasty = (options) ->
         commits.push { id: commitID, comments: [] }
         collection = commits[commits.length - 1]
 
-      collection.comments.concat(comments)
+      collection.comments.concat(comments.data)
       console.log comments, collection
 
     # TODO: error handling for 404/500
