@@ -21,7 +21,7 @@
       return "https://api.github.com/repos/" + settings.githubUser + "/" + settings.githubRepo;
     };
     commitAPIURL = function(commitID) {
-      return "" + (repoAPIURL()) + "/" + commitID;
+      return "" + (repoAPIURL()) + "/commits/" + commitID;
     };
     commitCommentsAPIURL = function(commitID) {
       return "" + (commitAPIURL(commitID)) + "/comments";

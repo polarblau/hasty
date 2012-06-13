@@ -20,7 +20,7 @@ $.fn.hasty = (options) ->
     "https://api.github.com/repos/#{settings.githubUser}/#{settings.githubRepo}"
 
   commitAPIURL = (commitID) ->
-    "#{repoAPIURL()}/#{commitID}"
+    "#{repoAPIURL()}/commits/#{commitID}"
 
   commitCommentsAPIURL = (commitID) ->
     "#{commitAPIURL(commitID)}/comments"
