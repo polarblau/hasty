@@ -49,11 +49,20 @@ $.fn.hasty = (options) ->
 
     $this = $(@)
 
-    commitIDs = settings.commitIDs || $this.data('commit-ids')
-    success = (data) -> console.log(data)
-    error = (request, status, error) -> console.log status, error
+    commitIDs      = settings.commitIDs || $this.data('commit-ids')
+    commits        = []
+    success        = (commit) -> commits.push commit
+    # TODO: error handling for 404/500
+    error          = (request, status, error) ->
+    commitRequests = []
+
     for id in commitIDs
-      loadCommit id, success, error
+      commitRequests.push loadCommit(id, success, error)
+
+    $.when.apply($, commitRequests).done ->
+      console.log commits.length
+      console.log('all done')
+
 
     # create a view and save reference
     # View = new Hasty.View($this, settings.template)

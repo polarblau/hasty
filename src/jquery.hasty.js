@@ -44,21 +44,23 @@
       });
     };
     return this.each(function() {
-      var $this, commitIDs, error, id, success, _i, _len, _results;
+      var $this, commitIDs, commitRequests, commits, error, id, success, _i, _len;
       $this = $(this);
       commitIDs = settings.commitIDs || $this.data('commit-ids');
-      success = function(data) {
-        return console.log(data);
+      commits = [];
+      success = function(commit) {
+        return commits.push(commit);
       };
-      error = function(request, status, error) {
-        return console.log(status, error);
-      };
-      _results = [];
+      error = function(request, status, error) {};
+      commitRequests = [];
       for (_i = 0, _len = commitIDs.length; _i < _len; _i++) {
         id = commitIDs[_i];
-        _results.push(loadCommit(id, success, error));
+        commitRequests.push(loadCommit(id, success, error));
       }
-      return _results;
+      return $.when.apply($, commitRequests).done(function() {
+        console.log(commits.length);
+        return console.log('all done');
+      });
     });
   };
 
