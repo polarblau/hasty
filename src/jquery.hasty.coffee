@@ -39,8 +39,8 @@ $.fn.hasty = (options) ->
   loadCommit = (commitID, success, error) ->
     $.ajax
       url     : commitAPIURL(commitID)
-      success : success() if success?
-      error   : error() if error?
+      success : success if success?
+      error   : error if error?
       dataType: 'jsonp'
 
   # --
