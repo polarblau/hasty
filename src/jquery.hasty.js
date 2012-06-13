@@ -42,9 +42,15 @@
       });
     };
     return this.each(function() {
-      var $this, commitIDs, id, _i, _len, _results;
+      var $this, commitIDs, error, id, success, _i, _len, _results;
       $this = $(this);
       commitIDs = settings.commitIDs || $this.data('commit-ids');
+      success = function(data) {
+        return console.log(data);
+      };
+      error = function() {
+        return console.log(arguments);
+      };
       _results = [];
       for (_i = 0, _len = commitIDs.length; _i < _len; _i++) {
         id = commitIDs[_i];
