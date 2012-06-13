@@ -8,7 +8,7 @@
     var commitAPIURL, commitCommentsAPIURL, defaults, loadCommentsForCommit, repoAPIURL, repoWebURL, settings;
     defaults = {
       renderer: Mustache,
-      template: '/hasty/themes/default/template.mustache',
+      template: "<ul>\n  {{#comments}}\n    <li>\n      <span class='author'>\n        <img src='{{user.avatar_url}}' alt='Gravatar' />\n        <strong>{{user.login}}</strong>\n        said:\n      </span>\n      <span class='date'>{{created_at}}</span>\n      <span class='body'>{{body}}</span>\n    </li>\n  {{/comments}}\n</ul>",
       githubUser: null,
       githubRepo: null,
       commitIDs: null,
@@ -58,7 +58,9 @@
         commentRequests.push(loadCommentsForCommit(id, success, error));
       }
       return $.when.apply($, commentRequests).done(function() {
-        return console.log(commitComments);
+        var html;
+        html = settings.renderer.render(settings.template, commitComments);
+        return $this.html(html);
       });
     });
   };

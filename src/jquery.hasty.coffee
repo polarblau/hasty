@@ -4,7 +4,21 @@ $.fn.hasty = (options) ->
 
   defaults =
     renderer  : Mustache
-    template  : '/hasty/themes/default/template.mustache'
+    template  : """
+      <ul>
+        {{#comments}}
+          <li>
+            <span class='author'>
+              <img src='{{user.avatar_url}}' alt='Gravatar' />
+              <strong>{{user.login}}</strong>
+              said:
+            </span>
+            <span class='date'>{{created_at}}</span>
+            <span class='body'>{{body}}</span>
+          </li>
+        {{/comments}}
+      </ul>
+    """
     githubUser: null
     githubRepo: null
     commitIDs : null
@@ -58,7 +72,8 @@ $.fn.hasty = (options) ->
       commentRequests.push loadCommentsForCommit(id, success, error)
 
     $.when.apply($, commentRequests).done ->
-      console.log commitComments
+      html = settings.renderer.render settings.template, commitComments
+      $this.html html
       #if commits.length
         #for id in commitIDs
 
