@@ -5,8 +5,8 @@
   $ = jQuery;
 
   $.fn.hasty = function(options) {
-    var commitAPIURL, commitCommentWebURL, commitCommentsAPIURL, commitCommentsWebURL, loadCommit, repoAPIURL, repoWebURL, settings;
-    settings = $.extend({
+    var commitAPIURL, commitCommentWebURL, commitCommentsAPIURL, commitCommentsWebURL, defaults, loadCommit, repoAPIURL, repoWebURL, settings;
+    defaults = {
       renderer: Mustache,
       template: '/hasty/themes/default/template.mustache',
       githubUser: null,
@@ -14,7 +14,8 @@
       commitIDs: null,
       commitsURL: null,
       perPage: 10
-    });
+    };
+    settings = $.extend(defaults, options);
     console.log(settings);
     repoAPIURL = function() {
       return "https://api.github.com/repos/" + settings.user + "/" + settings.repo;

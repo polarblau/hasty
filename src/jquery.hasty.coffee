@@ -2,7 +2,7 @@ $ = jQuery
 
 $.fn.hasty = (options) ->
 
-  settings = $.extend
+  defaults =
     renderer  : Mustache
     template  : '/hasty/themes/default/template.mustache'
     githubUser: null
@@ -11,6 +11,7 @@ $.fn.hasty = (options) ->
     commitsURL: null
     perPage   : 10
 
+  settings = $.extend defaults, options
   console.log settings
 
   # PATH helpers
